@@ -1,0 +1,129 @@
+#include<iostream>
+using namespace std;
+
+class Node{
+public:
+	int data;
+	Node* next;
+	Node* prev;
+	Node(int val){
+		data = val;
+	}
+};
+
+class dll{
+public:
+	Node* head;
+	Node* tail;
+	dll(){
+		head = tail = NULL;
+	}
+	void addFront(int data){
+		Node* newNode = new Node(data);
+		if(head==NULL){
+			head = tail = newNode;
+		}
+		else{
+			newNode->next = head;
+			newNode->prev = NULL;
+			head->prev = newNode;
+			head = newNode;
+		}
+	}
+	void addBack(int data){
+		Node* newNode = new Node(data);
+		if(head==NULL){
+			head = tail = newNode;
+		}
+		else{
+			newNode->prev = tail;
+			newNode->next = NULL;
+			tail->next = newNode;
+			tail = newNode;
+		}
+	}
+	void popFront(){
+		Node* temp = head;
+		head = head->next;
+		head->prev = NULL;
+		delete temp;
+		traverseFront();
+	}
+	void popBack(){
+		Node* temp = tail;
+		tail = tail->prev;
+		tail->next = NULL;
+		delete temp;
+		traverseFront();
+	}
+	int size(){
+		Node* temp = head;
+		int s = 0;
+		while(temp!=NULL){
+			s++;
+			temp = temp->next;
+		}
+		return s;
+	}
+	Node* nodeAt(int index){
+		Node* temp = head;
+		for(int i=0 ; i<index ; i++){
+			temp = temp->next;
+		}
+		return temp;
+	}
+	void addAt(int index , int data){
+		int s = size();
+		if(index<0 || index>s){
+			cout<<"out of index"<<endl;
+			return;
+		}
+		if(index==0){
+			addFront(data);
+		}
+		else if(index==s){
+			addBack(data);
+		}
+		else{
+			Node* next = nodeAt(index);
+			Node* prev = nodeAt(index-1);
+			Node* newNode = new Node(data);
+			newNode->next = next;
+			newNode->prev = prev;
+			next->prev = newNode;
+			prev->next = newNode;
+		}
+	}
+	void traverseFront(){
+		Node* temp = head;
+		while(temp != NULL){
+			cout<<temp->data<<"->";
+			temp = temp->next;
+		}
+		cout<<"null"<<endl;
+	}
+	void traverseBack(){
+		Node* temp = tail;
+		cout<<"null";
+		while(temp != NULL){
+			cout<<"<-"<<temp->data;
+			temp = temp->prev;
+		}
+		cout<<endl;
+	}
+};
+int main(){
+	dll l1;
+	l1.addFront(1);
+	l1.addFront(2);
+	l1.addFront(3);
+	l1.addFront(4);
+	l1.addBack(0);
+	l1.traverseFront();
+	l1.traverseBack();
+	l1.popFront();
+	l1.popBack();
+	l1.addAt(2,99);
+	l1.traverseFront();
+	return 0;
+}
